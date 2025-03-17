@@ -1,5 +1,6 @@
 import iziToast from "izitoast";
 import 'izitoast/dist/css/iziToast.min.css';
+import css from './SearchBar.module.css';
 
 export default function SearchBar({onSearch, value}) {
     
@@ -22,15 +23,15 @@ export default function SearchBar({onSearch, value}) {
     }
 
     return(
-        <form onSubmit={hendleSubmit}>
-            <input
+        <form className={css.form} onSubmit={hendleSubmit}>
+            <input className={css.input}
                 autoComplete="off"
                 name="img"
                 id="img"
                 type="text"
                 value={value}
                 placeholder="Search... "/>
-            <button type="submit" >Search</button>
+            <button className={css.btnSearch} type="submit" >Search</button>
         </form>
         
     )

@@ -1,11 +1,13 @@
-import css from './ImageGallery.module.css'
+import { forwardRef } from "react";
+import css from './ImageGallery.module.css';
 
-export default function ImageCard({id, likes, raw, alt_description}) {
-    return(
-        <li className={css.listItem} key={id}>
+const ImageCard = forwardRef(({ likes, raw, alt_description }, ref) => {
+    return (
+        <div className={css.listItem} ref={ref}>
             <img className={css.listImg} src={raw} alt={alt_description} />
             <p className={css.listParagraph}>Likes: {likes}</p>
-            
-        </li>
-    )
-}
+        </div>
+    );
+});
+
+export default ImageCard;

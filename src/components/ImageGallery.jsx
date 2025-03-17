@@ -1,12 +1,22 @@
 import ImageCard from "./ImageCard"
 import css from './ImageGallery.module.css'
 
-export default function ImageGallery({images}){
+export default function ImageGallery({ images, lastImageRef }) {
     return (
         <ul className={css.list}>
-        {images.map(({id, likes, urls, alt_description}) => {
-            return <ImageCard key={id} likes={likes} raw={urls.regular} alt_description={alt_description}/>
-        })}
+            {images.map(({ id, likes, urls, alt_description }, index) => {
+                const isLastImage = index === images.length - 1;
+                return (
+                    <li key={id}>
+                        <ImageCard 
+                            likes={likes} 
+                            raw={urls.regular} 
+                            alt_description={alt_description}
+                            ref={isLastImage ? lastImageRef : null} // Передаємо ref лише для останнього зображення
+                        />
+                    </li>
+                );
+            })}
         </ul>
-    )
+    );
 }
