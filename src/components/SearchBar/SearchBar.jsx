@@ -1,6 +1,5 @@
-import iziToast from "izitoast";
-import 'izitoast/dist/css/iziToast.min.css';
 import css from './SearchBar.module.css';
+import { toast } from "react-hot-toast";
 
 export default function SearchBar({onSearch, value}) {
     
@@ -10,11 +9,10 @@ export default function SearchBar({onSearch, value}) {
         const image = form.elements.img.value;
     
         if (form.elements.img.value.trim() === "") {
-            iziToast.error({
-                message: "Sorry, form cannot be empty!",
-                timeout: 5000, 
-                position: 'topRight',
+            toast.error("Input cannot be empty!", {
+                position: "top-right",
             });
+            
             return;
         }
     

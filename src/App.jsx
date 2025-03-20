@@ -1,16 +1,14 @@
-import { useState, useEffect, useRef } from 'react'
-import axios from 'axios';
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
+import { useState, useEffect, useRef } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
 import fetchImages from './api';
-import './App.css'
-import SearchBar from './components/SearchBar';
-import ImageGallery from './components/ImageGallery';
-import Loader from './components/Loader';
-import LoadMoreBtn from './components/LoadMoreBtn';
+import './App.css';
+import SearchBar from './components/SearchBar/SearchBar';
+import ImageGallery from './components/ImageGallery/ImageGallery';
+import Loader from './components/Loader/Loader';
+import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
+import ImageModal from './components/ImageGallery/ImageModal';
 
 function App() {
-
   const [images, setImage] = useState([]);
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -18,7 +16,9 @@ function App() {
   const [showBtn, setShowBtn] = useState(false);
   const [query, setQuery] = useState('');
   const lastImageRef = useRef(null);
-
+  const [isOpen, setIsOpen] = useState(false); 
+  const [imgTarget, setImgTarget] = useState('');
+  
   const onSearch = async (img) => {
     setImage([]);
     setQuery(img);
@@ -32,21 +32,16 @@ function App() {
       const totalPages = Math.ceil(data.totalHits / itemsPerPage);
 
       if(page >= totalPages){
-        iziToast.info({
-          position: "topRight",
-          timeout: 5000, 
-          message: "You've reached the end of the results",
-        });
+        toast.info("You've reached the end of the results", {
+          position: "top-right",
+      });
+      
       }
       setPage(page+1);
       setShowBtn(true);
     } catch {
-      iziToast.error({
-        position: "topRight",
-          timeout: 5000, 
-          message: "Something going wrong. Try again!", 
-        
-      })
+      toast.error("Something went wrong. Try again!", 
+        { position: "top-right" });
     } finally {
       setLoader(false); 
       setShowBtn(true);
@@ -64,20 +59,15 @@ function App() {
       const totalPages = Math.ceil(data.totalHits / itemsPerPage); 
       if (page + 1 >= totalPages) {
         setShowBtn(false);
-        iziToast.info({
-          position: "topRight",
-          timeout: 5000,
-          message: "You've reached the end of the results", 
-        });
+        toast.info("You've reached the end of the results", {
+          position: "top-right",
+      });
         return;
       }
     } catch (error) {
       setShowBtn(false);
-      iziToast.error({
-        position: "topRight",
-        timeout: 5000,
-        message: "Something went wrong. Try again!", 
-      });
+      toast.error("Something went wrong. Try again!", 
+        { position: "top-right" });
       return;
     } finally {
 
@@ -91,24 +81,27 @@ function App() {
       
     }
   };
-
+  
   useEffect(() => {
     if (images.length > 0) {
       lastImageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [images]);
-  
+
+  const openModalImg = (ev) => {
+    setImgTarget(ev.target.src);
+    setIsOpen(true);
+  };
+
   return (
     <>
-      <SearchBar onSearch={onSearch}/>
-      {isLoad ? <Loader /> : <ImageGallery images={images} lastImageRef={lastImageRef} />}
+      <SearchBar onSearch={onSearch} />
+      <Toaster position="top-right" reverseOrder={false} />
+      {isLoad ? <Loader /> : <ImageGallery openModal={openModalImg} images={images} lastImageRef={lastImageRef} />}
       {showBtn && <LoadMoreBtn handleClick={handleLoadMore} />}
-      
+      {isOpen && <ImageModal image={imgTarget} isOpen={isOpen} onClose={() => setIsOpen(false)} />}
     </>
-  )
+  );
 }
 
-export default App
-
-//ID - 723760
-//KEY - dzWHEkRwdAK-kYxqKeOqm0KPr_VRA4BcIOrFg0cjdVg
+export default App;

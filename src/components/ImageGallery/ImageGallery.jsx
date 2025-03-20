@@ -1,7 +1,7 @@
-import ImageCard from "./ImageCard"
+import ImageCard from './ImageCard'
 import css from './ImageGallery.module.css'
 
-export default function ImageGallery({ images, lastImageRef }) {
+export default function ImageGallery({ openModal, images, lastImageRef }) {
     return (
         <ul className={css.list}>
             {images.map(({ id, likes, urls, alt_description }, index) => {
@@ -9,6 +9,7 @@ export default function ImageGallery({ images, lastImageRef }) {
                 return (
                     <li key={id}>
                         <ImageCard 
+                            openModal={openModal}
                             likes={likes} 
                             raw={urls.regular} 
                             alt_description={alt_description}
