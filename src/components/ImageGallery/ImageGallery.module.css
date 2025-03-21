@@ -35,3 +35,7 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     filter: brightness(1.1);
 }
+
+.heartIcon{
+    color: #007bff;
+}

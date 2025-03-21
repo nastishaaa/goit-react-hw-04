@@ -1,0 +1,11 @@
+.errorIcon{
+    color: brown;
+}
+
+.errorMsg{
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    color: brown;
+    font-weight: 200;
+}

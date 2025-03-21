@@ -7,9 +7,11 @@ import ImageGallery from './components/ImageGallery/ImageGallery';
 import Loader from './components/Loader/Loader';
 import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
 import ImageModal from './components/ImageGallery/ImageModal';
+import ErrorMessage from './components/ErrorMessage/ErrorMessage';
 
 function App() {
   const [images, setImage] = useState([]);
+  const [isError, setIsError] = useState(false);
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [isLoad, setLoader] = useState(false);
@@ -25,6 +27,7 @@ function App() {
     setLoader(true); 
     setShowBtn(false); 
     setPage(1);
+    setIsError(false);
     try {
       const data = await fetchImages(img, page, 12);
       setImage(data.images); 
@@ -39,18 +42,19 @@ function App() {
       }
       setPage(page+1);
       setShowBtn(true);
+      setIsError(false);
     } catch {
-      toast.error("Something went wrong. Try again!", 
-        { position: "top-right" });
+      setIsError(true)
+      
     } finally {
       setLoader(false); 
-      setShowBtn(true);
     }
   }
 
   const handleLoadMore = async () => {
     setLoader(true);
     setShowBtn(false); 
+    setIsError(false);
     try {
       const data = await fetchImages(query, page + 1, 12); 
       setImage((prevImages) => [...prevImages, ...data.images]); 
@@ -64,21 +68,20 @@ function App() {
       });
         return;
       }
+      setShowBtn(true);
     } catch (error) {
       setShowBtn(false);
-      toast.error("Something went wrong. Try again!", 
-        { position: "top-right" });
+      setIsError(true);
       return;
     } finally {
 
       window.scrollBy({
-        top: 150,
+        top: 300,
         behavior: 'smooth'
     });
 
       setLoader(false); 
-      setShowBtn(true);
-      
+    
     }
   };
   
@@ -89,17 +92,22 @@ function App() {
   }, [images]);
 
   const openModalImg = (ev) => {
-    setImgTarget(ev.target.src);
-    setIsOpen(true);
+    if (!isOpen) {  
+      setImgTarget(ev.target.src);
+      setIsOpen(true);
+    }
+    
   };
 
   return (
     <>
       <SearchBar onSearch={onSearch} />
       <Toaster position="top-right" reverseOrder={false} />
-      {isLoad ? <Loader /> : <ImageGallery openModal={openModalImg} images={images} lastImageRef={lastImageRef} />}
+      <ImageGallery openModal={openModalImg} images={images} lastImageRef={lastImageRef} />
+      {isLoad && <Loader />}
       {showBtn && <LoadMoreBtn handleClick={handleLoadMore} />}
       {isOpen && <ImageModal image={imgTarget} isOpen={isOpen} onClose={() => setIsOpen(false)} />}
+      {isError && <ErrorMessage />}
     </>
   );
 }

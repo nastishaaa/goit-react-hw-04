@@ -21,16 +21,20 @@ export default function SearchBar({onSearch, value}) {
     }
 
     return(
-        <form className={css.form} onSubmit={hendleSubmit}>
+        <header>
+            <form className={css.form} onSubmit={hendleSubmit}>
             <input className={css.input}
                 autoComplete="off"
                 name="img"
                 id="img"
+                autoFocus
                 type="text"
                 value={value}
-                placeholder="Search... "/>
-            <button className={css.btnSearch} type="submit" >Search</button>
+                placeholder="Search images and photos"/>
+            <button className={css.btnSearch} type="submit" > Search</button>
         </form>
+        </header>
+        
         
     )
 }
