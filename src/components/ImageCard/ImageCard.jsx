@@ -1,11 +1,9 @@
-import { forwardRef } from "react";
-import css from './ImageGallery.module.css';
-import { CiSaveDown1 } from "react-icons/ci";
+import css from '../ImageGallery/ImageGallery.module.css'
 import { IoIosHeartEmpty } from "react-icons/io";
 
-const ImageCard = forwardRef(({ openModal, likes, raw, alt_description }, ref) => {
+const ImageCard = ({ openModal, likes, raw, alt_description }) => {
     return (
-        <div className={css.listItem} ref={ref}>
+        <div className={css.listItem}>
             <img onClick={openModal} className={css.listImg} src={raw} alt={alt_description} />
             <div className={css.infoContent}>
                 <p className={css.listParagraph}>Likes: {likes} <IoIosHeartEmpty className={css.heartIcon} /></p>
@@ -13,6 +11,6 @@ const ImageCard = forwardRef(({ openModal, likes, raw, alt_description }, ref) =
             
         </div>
     );
-});
+};
 
 export default ImageCard;

@@ -1,5 +1,5 @@
 import Modal from 'react-modal';
-import css from './ImageModal.module.css';
+import css from './ImageModal.module.css'
 Modal.setAppElement('#root'); 
 
 export default function ImageModal({ image, isOpen, onClose }) {

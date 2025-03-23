@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import fetchImages from './api';
 import './App.css';
@@ -6,7 +6,7 @@ import SearchBar from './components/SearchBar/SearchBar';
 import ImageGallery from './components/ImageGallery/ImageGallery';
 import Loader from './components/Loader/Loader';
 import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
-import ImageModal from './components/ImageGallery/ImageModal';
+import ImageModal from './components/ImageModal/ImageModal';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage';
 
 function App() {
@@ -17,30 +17,29 @@ function App() {
   const [isLoad, setLoader] = useState(false);
   const [showBtn, setShowBtn] = useState(false);
   const [query, setQuery] = useState('');
-  const lastImageRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false); 
   const [imgTarget, setImgTarget] = useState('');
   
-  const onSearch = async (img) => {
+  const onSearch = async () => {
     setImage([]);
-    setQuery(img);
     setLoader(true); 
     setShowBtn(false); 
-    setPage(1);
     setIsError(false);
+
+    const newPage = 1; 
+    setPage(newPage);
     try {
-      const data = await fetchImages(img, page, 12);
+      const data = await fetchImages(query, newPage, 12);
       setImage(data.images); 
 
       const totalPages = Math.ceil(data.totalHits / itemsPerPage);
 
-      if(page >= totalPages){
+      if(newPage >= totalPages){
         toast.info("You've reached the end of the results", {
           position: "top-right",
       });
       
       }
-      setPage(page+1);
       setShowBtn(true);
       setIsError(false);
     } catch {
@@ -55,13 +54,14 @@ function App() {
     setLoader(true);
     setShowBtn(false); 
     setIsError(false);
+    const newPage = page + 1;
+    setPage(newPage);
     try {
-      const data = await fetchImages(query, page + 1, 12); 
+      const data = await fetchImages(query, newPage, 12); 
       setImage((prevImages) => [...prevImages, ...data.images]); 
-      setPage((prevPage) => prevPage + 1);  
 
       const totalPages = Math.ceil(data.totalHits / itemsPerPage); 
-      if (page + 1 >= totalPages) {
+      if (newPage + 1 >= totalPages) {
         setShowBtn(false);
         toast.info("You've reached the end of the results", {
           position: "top-right",
@@ -86,11 +86,14 @@ function App() {
   };
   
   useEffect(() => {
-    if (images.length > 0) {
-      lastImageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (images.length > 0 && !isLoad) {
+      window.scrollBy({
+        top: 500, 
+        behavior: 'smooth',
+      });
     }
-  }, [images]);
-
+  }, [images, isLoad]);
+  
   const openModalImg = (ev) => {
     if (!isOpen) {  
       setImgTarget(ev.target.src);
@@ -101,9 +104,10 @@ function App() {
 
   return (
     <>
-      <SearchBar onSearch={onSearch} />
+      <SearchBar onSearch={onSearch}
+      onChange={(e) => setQuery(e.target.value)} />
       <Toaster position="top-right" reverseOrder={false} />
-      <ImageGallery openModal={openModalImg} images={images} lastImageRef={lastImageRef} />
+      <ImageGallery openModal={openModalImg} images={images} />
       {isLoad && <Loader />}
       {showBtn && <LoadMoreBtn handleClick={handleLoadMore} />}
       {isOpen && <ImageModal image={imgTarget} isOpen={isOpen} onClose={() => setIsOpen(false)} />}

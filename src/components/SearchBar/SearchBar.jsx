@@ -1,7 +1,7 @@
 import css from './SearchBar.module.css';
 import { toast } from "react-hot-toast";
 
-export default function SearchBar({onSearch, value}) {
+export default function SearchBar({onSearch, onChange}) {
     
     const hendleSubmit = (ev) => {
         ev.preventDefault();
@@ -29,7 +29,7 @@ export default function SearchBar({onSearch, value}) {
                 id="img"
                 autoFocus
                 type="text"
-                value={value}
+                onChange={onChange}
                 placeholder="Search images and photos"/>
             <button className={css.btnSearch} type="submit" > Search</button>
         </form>
