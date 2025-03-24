@@ -35,6 +35,13 @@ function App() {
 
       const totalPages = Math.ceil(data.totalHits / itemsPerPage);
 
+      if (!data || !data.images || data.images.length === 0) {
+        toast.error("No results found. Try a different query.", {
+            position: "top-right",
+        });
+        return;
+    }
+
       if(newPage >= totalPages){
         toast("You've reached the end of the results", {
           position: "top-right",
