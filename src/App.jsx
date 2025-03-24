@@ -28,6 +28,7 @@ function App() {
 
     const newPage = 1; 
     setPage(newPage);
+
     try {
       const data = await fetchImages(query, newPage, 12);
       setImage(data.images); 
@@ -47,6 +48,8 @@ function App() {
       
     } finally {
       setLoader(false); 
+      console.log(newPage);
+      
     }
   }
 
@@ -76,12 +79,12 @@ function App() {
     } finally {
 
       window.scrollBy({
-        top: 300,
+        top: 500,
         behavior: 'smooth'
     });
 
       setLoader(false); 
-    
+      console.log(newPage);
     }
   };
   
