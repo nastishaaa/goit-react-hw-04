@@ -48,7 +48,6 @@ function App() {
       
     } finally {
       setLoader(false); 
-      console.log(newPage);
       
     }
   }
@@ -84,7 +83,6 @@ function App() {
     });
 
       setLoader(false); 
-      console.log(newPage);
     }
   };
   
