@@ -61,16 +61,18 @@ function App() {
     try {
       const data = await fetchImages(query, newPage, 12); 
       setImage((prevImages) => [...prevImages, ...data.images]); 
-
+      console.log(data);
+      
       const totalPages = Math.ceil(data.totalHits / itemsPerPage); 
-      if (newPage + 1 >= totalPages) {
-        setShowBtn(false);
-        toast.info("You've reached the end of the results", {
+      if (newPage >= totalPages) {
+        toast("You've reached the end of the results", {
           position: "top-right",
-      });
+        });
         return;
       }
+
       setShowBtn(true);
+
     } catch (error) {
       setShowBtn(false);
       setIsError(true);
