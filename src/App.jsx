@@ -36,7 +36,7 @@ function App() {
       const totalPages = Math.ceil(data.totalHits / itemsPerPage);
 
       if(newPage >= totalPages){
-        toast.info("You've reached the end of the results", {
+        toast("You've reached the end of the results", {
           position: "top-right",
       });
       
@@ -61,7 +61,6 @@ function App() {
     try {
       const data = await fetchImages(query, newPage, 12); 
       setImage((prevImages) => [...prevImages, ...data.images]); 
-      console.log(data);
       
       const totalPages = Math.ceil(data.totalHits / itemsPerPage); 
       if (newPage >= totalPages) {
